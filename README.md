@@ -1,3 +1,3 @@
 # MenuStructure
 
-Simple menu structure for any purpose.
+Draft menu structure for any purpose.
