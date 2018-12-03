@@ -13,39 +13,39 @@ public class Menu implements Iterable<Menu> {
     int id = 0;
     Map<Integer, Menu> items = new HashMap<>();
 
-    Menu(String name){
+    Menu(String name) {
         this.name = name;
     }
 
-    int addItem(Menu item){
+    int addItem(Menu item) {
         items.put(itemsCounter, item);
         return itemsCounter++;
     }
 
-    int addSubMenu(Menu subMenu){
+    int addSubMenu(Menu subMenu) {
         addItem(subMenu);
         subMenu.setRootMenu(this);
         return itemsCounter++;
     }
 
-    void setRootMenu(Menu rootMenu){
+    void setRootMenu(Menu rootMenu) {
         this.rootMenu = rootMenu;
     }
 
-    boolean isItem(){
+    boolean isItem() {
         return itemsCounter == 0;
     }
 
-    boolean haveCard(){
+    boolean haveCard() {
         return cardInfo != null;
     }
 
-    Menu addCard(Card card){
+    Menu addCard(Card card) {
         this.cardInfo = card;
         return this;
     }
 
-    Card getCard(){
+    Card getCard() {
         return this.cardInfo;
     }
 

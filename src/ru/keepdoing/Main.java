@@ -7,8 +7,8 @@ public class Main {
         Card cardInfo = new Card().
                 add(Card.Field.name, "Yuri").
                 add(Card.Field.desc, "Coder").
-                add(Card.Field.phone, "+7(911)571-62-56").
-                add(Card.Field.link, "vk.com/stritron");
+                add(Card.Field.phone, "+7(911)500-00-00").
+                add(Card.Field.link, "vk.com/yuri");
 
         Menu item1 = new Menu("Item 1").addCard(cardInfo);
         Menu item2 = new Menu("Item 2").addCard(cardInfo);

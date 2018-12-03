@@ -35,8 +35,8 @@ public class Card implements Iterable<String>{
 //        Card card = new Card().
 //                add(Field.name, "Yuri").
 //                add(Field.desc, "Coder").
-//                add(Field.phone, "+7(911)571-62-56").
-//                add(Field.link, "vk.com/stritron");
+//                add(Field.phone, "+7(911)500-00-00").
+//                add(Field.link, "vk.com/yuri");
 //
 //        for (String s: card){
 //            System.out.println(s);
