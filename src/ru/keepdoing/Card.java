@@ -30,19 +30,4 @@ public class Card implements Iterable<String>{
     public enum Field {
         name, desc, phone, link
     }
-
-//    public static void main(String[] args) {
-//        Card card = new Card().
-//                add(Field.name, "Yuri").
-//                add(Field.desc, "Coder").
-//                add(Field.phone, "+7(911)500-00-00").
-//                add(Field.link, "vk.com/yuri");
-//
-//        for (String s: card){
-//            System.out.println(s);
-//        }
-//
-//        System.out.println("\n" + card.get(Field.name));
-//
-//    }
 }
