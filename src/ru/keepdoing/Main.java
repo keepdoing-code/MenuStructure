@@ -4,8 +4,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    private static final String ASK_STRING = "Enter item number: ";
+    private static final String ASK_STRING = "> ";
     private static final String WRONG_INPUT = "Wrong input! Try again.";
+    private static final String UNKNOWN_COMMAND = "Unknown command";
+    private static final String WRONG_ITEM = "Wrong item";
 
     public static void main(String[] args) {
 
@@ -18,61 +20,116 @@ public class Main {
         Menu item1 = new Menu("Item 1").setCard(cardInfo);
         Menu item2 = new Menu("Item 2").setCard(cardInfo);
 
-        Menu subSubMenu = new Menu("SubSubmenu");
+        Menu subSubMenu = new Menu("Level 2");
         subSubMenu.addItem(item1);
         subSubMenu.addItem(item2);
 
-        Menu subMenu = new Menu("Submenu");
+        Menu subMenu = new Menu("Level 1");
         subMenu.addItem(item1);
         subMenu.addItem(item2);
         subMenu.addSubMenu(subSubMenu);
 
-        Menu rootMenu = new Menu("Root menu");
+        Menu rootMenu = new Menu("Level 0");
         rootMenu.addItem(item1);
         rootMenu.addItem(item2);
         rootMenu.addSubMenu(subMenu);
-        rootMenu.addSubMenu(subSubMenu);
-//--------------------------------------------------------
-        Menu menuPointer = rootMenu;
-        printAllMenu(rootMenu,"");
-        menuPointer = askItem(ASK_STRING, rootMenu);
 
+        Menu menuPointer = rootMenu;
+
+        dialog(menuPointer);
     }
 
-    static Menu askItem(final String question, final Menu current){
-        try{
+
+    //need refactoring
+    static void dialog(Menu menuPointer){
+        String inStr = "";
+        int num = 0;
+
+        System.out.println();
+        printMenu(menuPointer);
+
+        while (true) {
+            inStr = askInput(ASK_STRING);
+
+            if(isNumber(inStr)){
+            //menu item select
+                num = Integer.parseInt(inStr);
+                Menu m = menuPointer.getById(num);
+
+                if(m == null) {
+                    System.out.println(WRONG_ITEM);
+                    continue;
+                }
+                if(m.isItem()) {
+                    printCard(m.getCard(),"\t");
+                    printMenu(menuPointer);
+                }
+                else {
+                    menuPointer = m;
+                    printMenu(m);
+                }
+            } else {
+                //command select
+                switch (inStr){
+                    case "q":
+                        System.exit(0);
+                    case "b":
+                        if(menuPointer.haveRoot()){
+                            menuPointer = menuPointer.getRootMenu();
+                        }
+                        printMenu(menuPointer);
+                        break;
+                    default:
+                        System.out.println(UNKNOWN_COMMAND);
+                }
+            }
+        }
+    }
+
+    static String askInput(final String question) {
+        try {
             Scanner s = new Scanner(System.in);
             System.out.printf(question);
-            int id = s.nextInt();
-            return current.getById(id);
-        }catch (NumberFormatException | InputMismatchException | NullPointerException e){
+            return s.next();
+        } catch (NumberFormatException | InputMismatchException e) {
             System.out.println(WRONG_INPUT);
-            return askItem(question, current);
+            return askInput(question);
         }
     }
 
-    static void printMenu(Menu menu){
+    static void printMenu(Menu menu) {
         System.out.println(menu.getName());
-        for(Menu m: menu){
+        for (Menu m : menu) {
             System.out.printf("%d: %s\n", m.getId(), m.getName());
         }
+        if(menu.haveRoot()) System.out.println("b: go back");
+        System.out.println("q: exit app");
     }
 
-    static void printAllMenu(Menu menu, String tab){
-        for(Menu m: menu){
-            System.out.println(tab + m.getId() + " " + m.getName());
-            if(m.haveCard()){
-                //printCardInfo(m.getCard(), tab + "\t");
-            }
-            if(!m.isItem()){
-                printAllMenu(m, tab + "\t");
-            }
+    static void printCard(Card card, String tab) {
+        for (String s : card) {
+            System.out.println(tab + s);
         }
     }
 
-    static void printCardInfo(Card card, String tab){
-        for (String s: card){
-            System.out.println(tab + s);
+    static boolean isNumber(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException | InputMismatchException e) {
+            return false;
+        }
+    }
+
+    static void printAllMenu(Menu menu, String tab) {
+        for (Menu m : menu) {
+            System.out.println(tab + m.getId() + ":\t" + m.getName());
+            if (m.haveCard()) {
+                //printCard(m.getCard(), tab + "\t");
+            }
+            if (!m.isItem()) {
+                printAllMenu(m, tab + "\t");
+            }
         }
     }
 }

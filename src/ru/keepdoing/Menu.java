@@ -9,7 +9,7 @@ public class Menu implements Iterable<Menu> {
     private final String name;
     private Menu rootMenu = null;
     private Card cardInfo = null;
-    private int itemsCounter = 1;
+    private int itemsCounter = 0;
     private int id;
     private Map<Integer, Menu> items = new HashMap<>();
 
@@ -20,7 +20,6 @@ public class Menu implements Iterable<Menu> {
 
     Menu(String name) {
         this.name = name;
-
     }
 
     int addItem(Menu item) {
@@ -29,17 +28,9 @@ public class Menu implements Iterable<Menu> {
         return itemsCounter++;
     }
 
-    int addSubMenu(Menu subMenu) {
+    void addSubMenu(Menu subMenu) {
         subMenu.setRootMenu(this);
-        return addItem(subMenu);
-    }
-
-    boolean isItem() {
-        return itemsCounter == 0;
-    }
-
-    boolean haveCard() {
-        return cardInfo != null;
+        addItem(subMenu);
     }
 
     Menu setCard(Card card) {
@@ -47,27 +38,27 @@ public class Menu implements Iterable<Menu> {
         return this;
     }
 
-    Card getCard() {
-        return this.cardInfo;
-    }
-
-    String getName(){ return name; }
-
-    int getId(){ return id;}
-
     Menu getById(int menuId){
         return items.get(menuId);
     }
 
-    Menu getRootMenu(){
-        return rootMenu;
-    }
+    boolean haveRoot(){return rootMenu != null;}
 
-    private void setId(int id){
-        this.id = id;
-    }
+    boolean isItem() { return itemsCounter == 0; }
 
-    private void setRootMenu(Menu rootMenu) {
-        this.rootMenu = rootMenu;
-    }
+    boolean haveCard() { return cardInfo != null; }
+
+    Card getCard() { return this.cardInfo; }
+
+    String getName(){ return name; }
+
+    Menu getRootMenu(){ return rootMenu; }
+
+    int getId(){ return id;}
+
+    private void setId(int id) { this.id = id; }
+
+    private void setRootMenu(Menu rootMenu) { this.rootMenu = rootMenu; }
+
+    class NotExist extends Exception{}
 }
