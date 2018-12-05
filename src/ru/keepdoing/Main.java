@@ -11,29 +11,28 @@ public class Main {
                 add(Card.Field.name, "Yuri").
                 add(Card.Field.desc, "Coder").
                 add(Card.Field.phone, "+7(911)500-00-00").
-                add(Card.Field.link, "vk.com/yuri");
+                add(Card.Field.link, "https://vk.com/yuri");
 
         Menu item1 = new Menu("Item 1").setCard(cardInfo);
         Menu item2 = new Menu("Item 2").setCard(cardInfo);
-        Menu item3 = new Menu("Item 2").setCard(cardInfo);
+        Menu item3 = new Menu("Item 3").setCard(cardInfo);
+        Menu item4 = new Menu("Item 4").setCard(cardInfo);
 
-        Menu subSubMenu = new Menu("Level 2");
-        subSubMenu.addItem(item1);
+        Menu level2 = new Menu("Level 2");
+        level2.addItem(item1);
 
-        Menu subMenu = new Menu("Level 1");
-        subMenu.addItem(item1);
-        subMenu.addItem(item2);
-        subMenu.addItem(item3);
-        subMenu.addSubMenu(subSubMenu);
+        Menu level1 = new Menu("Level 1");
+        level1.addItem(item2);
+        level1.addItem(item3);
+        level1.addSubMenu(level2);
 
         Menu rootMenu = new Menu("Level 0");
-        rootMenu.addItem(item1);
-        rootMenu.addItem(item2);
-        rootMenu.addSubMenu(subMenu);
+        rootMenu.addItem(item4);
+        rootMenu.addSubMenu(level1);
 
-        Menu menuPointer = rootMenu;
-        MenuWrapper mw = new MenuWrapper(menuPointer, 0);
-        System.out.print(MenuWrapper.printMenu(menuPointer));
+        System.out.print(MenuWrapper.printMenu(rootMenu));
+
+        MenuWrapper mw = new MenuWrapper(rootMenu, 0);
 
         while (true){
             Scanner s = new Scanner(System.in);

@@ -1,6 +1,7 @@
 package ru.keepdoing;
 
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -24,45 +25,63 @@ public class MenuWrapper {
         return chatId;
     }
 
-    public String dialog(final String inString){
-        return process(pointer, inString);
+    private void setCurrentMenu(Menu menu){
+        this.pointer = menu;
     }
 
-    static String process(Menu menuPointer, final String inString) {
+    private Menu getPointer(){
+        return pointer;
+    }
 
-        if (isNumber(inString)) {                       //menu item select
-            StringBuilder sb = new StringBuilder();
-            int num = Integer.parseInt(inString);
-            Menu m = menuPointer.getById(num);
+    public String dialog(final String inString){
+        return process(this, inString);
+    }
 
-            if (m == null) return WRONG_ITEM;
+    private static String process(MenuWrapper wrapper, final String inString) {
+        if (isNumber(inString))
+            return processNumber(Integer.parseInt(inString), wrapper);
 
-            if (m.isItem()) {
-                sb.append(printCard(m.getCard(), "\t"))
-                        .append(printMenu(menuPointer));
-                return sb.toString();
-            } else {
-                menuPointer = m;
-                return printMenu(m);
-            }
-        } else {
-            switch (inString) {                         //command select
-                case "q":
-                    System.exit(0);
-                case "b":
-                    if (menuPointer.haveRoot()) {
-                        menuPointer = menuPointer.getRootMenu();
-                    }
-                    return printMenu(menuPointer);
-                default:
-                    return UNKNOWN_COMMAND;
-            }
+        return processCommand(inString, wrapper);
+    }
+
+    private static String processNumber(int number, MenuWrapper wrapper){
+
+        StringBuilder sb = new StringBuilder();
+        Menu selectedMenu = wrapper.getPointer().getById(number);
+
+        if (selectedMenu == null) {
+            sb.append(WRONG_ITEM).append(ASK_STRING);
+            return sb.toString();
+        }
+
+        if (selectedMenu.isItem()) {
+            sb.append(printCard(selectedMenu.getCard(), "\t")).
+                    append(printMenu(wrapper.getPointer()));
+            return sb.toString();
+        }
+
+        sb.append(printMenu(selectedMenu));
+        wrapper.setCurrentMenu(selectedMenu);
+        return sb.toString();
+    }
+
+    private static String processCommand(String inString, MenuWrapper wrapper){
+        switch (inString) {
+            case "q":
+                System.exit(0);
+            case "b":
+                if (wrapper.getPointer().haveRoot()) {
+                    wrapper.setCurrentMenu(wrapper.getPointer().getRootMenu());
+                }
+                return printMenu(wrapper.getPointer());
+            default:
+                return UNKNOWN_COMMAND + ASK_STRING;
         }
     }
 
     static String printMenu(Menu menu) {
         StringBuilder sb = new StringBuilder();
-        sb.append(menu.getName()).append('\n');
+        sb.append("<-=+ ").append(menu.getName()).append(" +=->").append('\n');
 
         for (Menu m : menu) {
             sb.append(String.format("%d: %s\n", m.getId(), m.getName()));
