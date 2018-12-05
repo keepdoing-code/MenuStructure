@@ -13,6 +13,9 @@ public class MenuWrapper {
     private static final String WRONG_ITEM = "Wrong item\n";
     private static final String GO_BACK = "b: go back";
     private static final String OTHER_CMDS = "q: exit app";
+    private static final String MENU_BRACKET = " <-> ";
+    private static final String TAB = "\t";
+    private static final char NEW_LINE = '\n';
     private final long chatId;
     private Menu pointer;
 
@@ -55,7 +58,7 @@ public class MenuWrapper {
         }
 
         if (selectedMenu.isItem()) {
-            sb.append(printCard(selectedMenu.getCard(), "\t")).
+            sb.append(printCard(selectedMenu.getCard(), TAB)).
                     append(printMenu(wrapper.getPointer()));
             return sb.toString();
         }
@@ -81,22 +84,22 @@ public class MenuWrapper {
 
     static String printMenu(Menu menu) {
         StringBuilder sb = new StringBuilder();
-        sb.append("<-=+ ").append(menu.getName()).append(" +=->").append('\n');
+        sb.append(MENU_BRACKET).append(menu.getName()).append(MENU_BRACKET).append(NEW_LINE);
 
         for (Menu m : menu) {
-            sb.append(String.format("%d: %s\n", m.getId(), m.getName()));
+            sb.append(String.format("%d: %s%c", m.getId(), m.getName(), NEW_LINE));
         }
         if (menu.haveRoot()) {
-            sb.append(GO_BACK).append('\n');
+            sb.append(GO_BACK).append(NEW_LINE);
         }
-        sb.append(OTHER_CMDS).append('\n').append(ASK_STRING);
+        sb.append(OTHER_CMDS).append(NEW_LINE).append(ASK_STRING);
         return sb.toString();
     }
 
     static String printCard(Card card, String tab) {
         StringBuilder sb = new StringBuilder();
         for (String s : card) {
-            sb.append(tab).append(s).append('\n');
+            sb.append(tab).append(s).append(NEW_LINE);
         }
         return sb.toString();
     }
@@ -114,7 +117,13 @@ public class MenuWrapper {
         StringBuilder sb = new StringBuilder();
 
         for (Menu m : menu) {
-            sb.append(tab).append(m.getId()).append(":\t").append(m.getName()).append('\n');
+            sb
+                    .append(tab)
+                    .append(m.getId())
+                    .append(":")
+                    .append(TAB)
+                    .append(m.getName())
+                    .append(NEW_LINE);
             if (m.haveCard()) {
                 sb.append(printCard(m.getCard(),tab + '\t'));
             }
